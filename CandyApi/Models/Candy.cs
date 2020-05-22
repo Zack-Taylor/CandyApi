@@ -16,10 +16,10 @@ namespace CandyApi.Models
         public int StashId { get; set; }
     }
 
-    public class Stash
-    {
-        public int StashId { get; set; }
-        public int CandyId { get; set; }
-        public int UserId { get; set; }
-    }
+  //  public class Stash
+   // {
+   //     public int StashId { get; set; }
+   //     public int CandyId { get; set; }
+   //     public int UserId { get; set; }
+   // }
 }

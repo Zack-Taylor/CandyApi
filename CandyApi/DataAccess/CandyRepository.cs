@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using CandyApi.Models;
 using Dapper;
-using System.Data.SqlClient;
+
 
 namespace CandyApi.DataAccess
 {
