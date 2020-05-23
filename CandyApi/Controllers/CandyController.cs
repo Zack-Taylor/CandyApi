@@ -29,17 +29,29 @@ namespace CandyApi.Controllers
             return Ok(allCandies);
         }
 
-        [HttpGet("name/{name}/")]
-        public IActionResult GetCandyByOwner(string name)
+        [HttpGet("user/{uid}/")]
+        public IActionResult GetCandyByOwner(int uid)
         
         {
-            var owner = _repository.GetCandyByOwner(name);
+            var owner = _repository.GetCandyByOwner(uid);
             var isEmpty = !owner.Any();
             if (isEmpty)
             {
                 return NotFound("This owner doesn't like candy. He flosses!");
             }
             return Ok(owner);
+        }
+
+        [HttpGet("user/{uid}/ate")]
+        public IActionResult GetEatenCandy(int uid)
+        {
+            var usersCandyEaten = _repository.GetEatenCandy(uid);
+            var change = !usersCandyEaten.Any();
+            if (change)
+            {
+                return NotFound("You've not eaten any candy.");
+            }
+            return Ok(usersCandyEaten);
         }
     }
 }

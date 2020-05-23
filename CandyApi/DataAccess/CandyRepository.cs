@@ -27,28 +27,55 @@ namespace CandyApi.DataAccess
             }
         }
 
-        public IEnumerable<Candy> GetCandyByOwner(string name)
+        public IEnumerable<Candy> GetCandyByOwner(int uid)
         {
             var sql = @"
                      select 
-	             u.name,
-                     c.Name,
-	             c.Manufacturer,
-	             c.DateCollected
+	                    c.CandyId,
+	                    c.[Name],
+                        c.Manufacturer,
+	                    c.FlavorId,
+	                    c.DateCollected,
+	                    c.Ate,
+	                    c.StashId
                      from stash s
 	                join candy c
 		           on c.CandyId = s.CandyId
 	                join [user] u
 		          on u.Uid = s.UserId
-	             where u.Name = @name
+	             where u.uid = @uid
                      order by u.Name
                       ";
 
             using (var db = new SqlConnection(ConnectionString))
             {
-                var parameters = new { Name = name };
+                var parameters = new { Uid = uid };
                 var result = db.Query<Candy>(sql, parameters);
                 return result;
+            }
+        }
+
+        public IEnumerable<Candy> GetEatenCandy(int uid)
+        {
+            var sql = @"SELECT
+	                    Candy.CandyId,
+	                    Candy.[Name],
+                        Candy.Manufacturer,
+	                    Candy.FlavorId,
+	                    Candy.DateCollected,
+	                    Candy.Ate,
+	                    Candy.StashId
+                    FROM Candy
+                    JOIN Stash ON Stash.StashId = Candy.StashId
+                    JOIN [User] ON [User].Uid = Stash.UserId
+                    WHERE Candy.Ate = 1 AND [User].Uid = @uid
+                    ORDER BY Candy.DateCollected, Candy.StashId";
+
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var parameters = new { Uid = uid };
+                var results = db.Query<Candy>(sql, parameters);
+                return results;
             }
         }
     }
