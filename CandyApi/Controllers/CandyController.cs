@@ -28,5 +28,18 @@ namespace CandyApi.Controllers
 
             return Ok(allCandies);
         }
+
+        [HttpGet("name/{name}/")]
+        public IActionResult GetCandyByOwner(string name)
+        
+        {
+            var owner = _repository.GetCandyByOwner(name);
+            var isEmpty = !owner.Any();
+            if (isEmpty)
+            {
+                return NotFound("This owner doesn't like candy. He flosses!");
+            }
+            return Ok(owner);
+        }
     }
 }
