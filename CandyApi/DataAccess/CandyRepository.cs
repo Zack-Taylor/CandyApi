@@ -78,5 +78,33 @@ namespace CandyApi.DataAccess
                 return results;
             }
         }
+
+        public IEnumerable<Candy> CandyToEat(int uid, string name)
+        {
+            var sql = @"SELECT TOP (1)
+                          [User].uid,
+	                      Candy.CandyId,
+	                      Candy.[Name],
+                          Candy.Manufacturer,
+	                      Candy.FlavorId,
+	                      Candy.DateCollected,
+	                      Candy.Ate,
+	                      Candy.StashId
+                    FROM Candy
+                    JOIN Stash ON Stash.StashId = Candy.StashId
+                    JOIN [User] ON [User].Uid = Stash.UserId
+                    WHERE Candy.Name = '@name' AND [User].Uid = @uid AND Candy.Ate = 0
+                    ORDER BY Candy.DateCollected, Candy.StashId";
+
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var parameters = new { Uid = uid, Name = name };
+                var results = db.Query<Candy>(sql, parameters);
+                //db.Execute(sql2) <--Potential Option
+                // methodName(results) <--Placed in User Class
+                // Display: MMMMMM Good
+                return results;
+            }
+        }
     }
 }

@@ -20,7 +20,7 @@
     "CandyApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "api/candies",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
