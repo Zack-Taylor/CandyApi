@@ -90,11 +90,20 @@ namespace CandyApi.DataAccess
 	                      Candy.DateCollected,
 	                      Candy.Ate,
 	                      Candy.StashId
+                    INTO #CandyToEat
                     FROM Candy
                     JOIN Stash ON Stash.StashId = Candy.StashId
                     JOIN [User] ON [User].Uid = Stash.UserId
-                    WHERE Candy.Name = '@name' AND [User].Uid = @uid AND Candy.Ate = 0
-                    ORDER BY Candy.DateCollected, Candy.StashId";
+                    WHERE Candy.Name = @name AND [User].Uid = @uid AND Candy.Ate = 0
+                    ORDER BY Candy.DateCollected, Candy.StashId
+                    UPDATE Candy
+                    SET Ate = 1
+                    OUTPUT inserted.*
+                    FROM Candy 
+                    JOIN #CandyToEat ON Candy.CandyId = #CandyToEat.CandyId
+                    WHERE Candy.CandyId = #CandyToEat.CandyId
+                    DROP Table #CandyToEat
+                    ";
 
             using (var db = new SqlConnection(ConnectionString))
             {
