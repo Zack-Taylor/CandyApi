@@ -58,13 +58,25 @@ namespace CandyApi.Controllers
         public IActionResult EatCandy(int uid, string name)
         {
             var CandyToEat = _repository.CandyToEat(uid,name);
-            /// CandyToEat is not returning a value.
             var emptyBag = !CandyToEat.Any();
             if (emptyBag)
             {
                 return NotFound("You ain't got nomo candy. Eat a salad!");
             }
             return Ok(CandyToEat);
+        }
+
+        [HttpPost("user/{uid}/flavor/{category}")]
+        public IActionResult EatCandyByFlava(int uid, string category)
+        {
+            var flavor = category.Replace('-', ' ');
+            var CandyToEatByFlavor = _repository.CandyToEatByFlavor(uid, flavor);
+            var emptyBag = !CandyToEatByFlavor.Any();
+            if (emptyBag)
+            {
+                return NotFound($"You ain't got nomo candy that tastes like {flavor}. Eat a salad!");
+            }
+            return Ok(CandyToEatByFlavor);
         }
     }
 }
