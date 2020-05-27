@@ -54,7 +54,7 @@ namespace CandyApi.Controllers
             return Ok(usersCandyEaten);
         }
 
-        [HttpGet("user/{uid}/eat/{name}")]
+        [HttpPost("user/{uid}/eat/{name}")]
         public IActionResult EatCandy(int uid, string name)
         {
             var CandyToEat = _repository.CandyToEat(uid,name);

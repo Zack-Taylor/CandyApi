@@ -22,4 +22,5 @@ namespace CandyApi.Models
    //     public int CandyId { get; set; }
    //     public int UserId { get; set; }
    // }
+
 }
