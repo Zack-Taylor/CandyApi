@@ -109,9 +109,44 @@ namespace CandyApi.DataAccess
             {
                 var parameters = new { Uid = uid, Name = name };
                 var results = db.Query<Candy>(sql, parameters);
-                //db.Execute(sql2) <--Potential Option
-                // methodName(results) <--Placed in User Class
-                // Display: MMMMMM Good
+                return results;
+            }
+
+        }
+
+        public IEnumerable<Candy> CandyToEatByFlavor(int uid, string flavor)
+        {
+
+            var sql = @"SELECT TOP (1)
+	                        [User].uid,
+	                        Candy.CandyId,
+	                        Candy.[Name],
+	                        Candy.Manufacturer,
+	                        Candy.FlavorId,
+	                        Candy.DateCollected,
+	                        Candy.Ate,
+	                        Candy.StashId
+                        INTO #CandyToEat
+                        FROM Candy
+                        JOIN Stash ON Stash.StashId = Candy.StashId
+                        JOIN [User] ON [User].Uid = Stash.UserId
+                        JOIN [Flavor] ON [Candy].FlavorId = Flavor.FlavorId
+                        WHERE FlavorName = @flavor AND [User].Uid = @uid AND Candy.Ate = 0
+                        ORDER BY Candy.DateCollected, Candy.StashId, NEWID()
+                        UPDATE Candy
+                        SET Ate = 1
+                        OUTPUT inserted.*
+                        FROM Candy 
+                        JOIN #CandyToEat ON Candy.CandyId = #CandyToEat.CandyId
+                        WHERE Candy.CandyId = #CandyToEat.CandyId
+                        DROP Table #CandyToEat
+                    ";
+
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var parameters = new { Flavor = flavor, Uid = uid };
+
+                var results = db.Query<Candy>(sql, parameters);
                 return results;
             }
         }
